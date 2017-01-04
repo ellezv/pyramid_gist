@@ -1,0 +1,59 @@
+Metadata-Version: 2.0
+Name: pyramid-ipython
+Version: 0.2
+Summary: pyramid ipython pshell
+Home-page: https://github.com/Pylons/pyramid_ipython
+Author: Michael Merickel
+Author-email: michael@merickel.org
+License: BSD-derived (http://www.repoze.org/LICENSE.txt)
+Platform: UNKNOWN
+Classifier: Intended Audience :: Developers
+Classifier: Framework :: Pyramid
+Classifier: License :: Repoze Public License
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 2.6
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.2
+Classifier: Programming Language :: Python :: 3.3
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Classifier: Topic :: Internet :: WWW/HTTP
+Classifier: Topic :: Internet :: WWW/HTTP :: WSGI
+Requires-Dist: IPython
+Requires-Dist: pyramid (>1.6a2)
+
+pyramid_ipython
+===============
+
+`IPython <http://ipython.org/>`_ bindings for
+`Pyramid <http://docs.pylonsproject.org/en/latest/docs/pyramid.html>`_.
+
+Installation
+------------
+
+::
+
+  $ $VENV/bin/pip install pyramid_ipython
+
+Usage
+-----
+
+Ensure the shell is available::
+
+  $ $VENV/bin/pshell --list-shells
+  Available shells:
+    ipython
+    python
+
+The shell should be auto-selected when running ``pshell``::
+
+  $ $VENV/bin/pshell development.ini
+
+However, if there are multiple shells you can also be explicit::
+
+  $ $VENV/bin/pshell -p ipython development.ini
+
+

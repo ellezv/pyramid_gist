@@ -1,0 +1,3 @@
+[pyramid.pshell_runner]
+ipython = pyramid_ipython:ipython_shell_runner
+
