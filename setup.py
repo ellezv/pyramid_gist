@@ -17,6 +17,7 @@ requires = [
     'transaction',
     'zope.sqlalchemy',
     'waitress',
+    'passlib'
     ]
 
 tests_require = [
@@ -50,6 +51,6 @@ setup(name='pyramid_gist',
       [paste.app_factory]
       main = pyramid_gist:main
       [console_scripts]
-      initialize_pyramid_gist_db = pyramid_gist.scripts.initializedb:main
+      initialize_db = pyramid_gist.scripts.initializedb:main
       """,
       )

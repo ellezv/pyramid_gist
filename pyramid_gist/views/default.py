@@ -1,19 +1,68 @@
-from pyramid.response import Response
 from pyramid.view import view_config
 
-from sqlalchemy.exc import DBAPIError
 
 from ..models import MyModel
 
+from pyramid.httpexceptions import HTTPFound
+
+from pyramid_gist.security import check_credentials
+from pyramid.security import remember, forget
+from passlib.apps import custom_app_context as pwd_context
+
 
 @view_config(route_name='home', renderer='../templates/mytemplate.jinja2')
-def my_view(request):
-    try:
+def home_view(request):
+    return {}
+
+
+@view_config(route_name='login', renderer='../templates/login.jinja2')
+def login_view(request):
+    if request.POST:
+        username = request.POST["username"]
+        password = request.POST["password"]
         query = request.dbsession.query(MyModel)
-        one = query.filter(MyModel.name == 'one').first()
-    except DBAPIError:
-        return Response(db_err_msg, content_type='text/plain', status=500)
-    return {'one': one, 'project': 'pyramid_gist'}
+        user_found = query.filter(MyModel.username == request.matchdict['username']).first()
+        if user_found is not None:
+            real_password = user_found.hashed_password
+            password = password
+            if check_credentials(password, real_password):
+                auth_head = remember(request, username)
+            return HTTPFound(
+                location=request.route_url("home"),
+                headers=auth_head
+            )
+
+    return {}
+
+
+@view_config(
+    route_name='logout',
+    renderer='../templates/logout.jinja2',
+    permission="logout")
+def logout_view(request):
+    auth_head = forget(request)
+    return HTTPFound(location=request.route_url("home"), headers=auth_head)
+
+
+@view_config(route_name='register', renderer='../templates/register.jinja2')
+def register_view(request):
+    if request.POST:
+        username = request.POST["username"]
+        password = request.POST["password"]
+        email = request.POST["email"]
+        first_name = request.POST["first_name"]
+        last_name = request.POST["last_name"]
+        favorite_food = request.POST["favorite_food"]
+        new_user = MyModel(
+            username=username,
+            hashed_password=pwd_context.hash(password),
+            email=email,
+            first_name=first_name,
+            last_name=last_name,
+            favorite_food=favorite_food)
+        request.dbsession.add(new_user)
+        return HTTPFound(location=request.route_url('home'))
+    return {}
 
 
 db_err_msg = """\
